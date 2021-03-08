@@ -6,7 +6,6 @@
 package me.saukin.springRestApi.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ public class ProductsBase {
     }
     
     public static class ProductsBaseHolder {
-        public static final ProductsBase INSTANCE = new ProductsBase();
+        private static final ProductsBase INSTANCE = new ProductsBase();
     }
     
     public static ProductsBase getInstance() {

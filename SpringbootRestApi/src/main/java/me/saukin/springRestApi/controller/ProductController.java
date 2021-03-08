@@ -1,11 +1,17 @@
 package me.saukin.springRestApi.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import me.saukin.springRestApi.model.Product;
 import me.saukin.springRestApi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,20 +27,33 @@ import org.springframework.web.bind.annotation.RestController;
  * @author saukin
  */
 @RestController
-@RequestMapping("/product")
+@RequestMapping(value = "/product")
 public class ProductController {
     
     @Autowired
     ProductService productService;
     
     @GetMapping
-    List<Product> getProducts() {
-        return productService.getProducts();
+    public ResponseEntity<List<Product>> getProducts() {
+        CacheControl cacheControl = CacheControl.noCache();
+        return ResponseEntity.ok().cacheControl(cacheControl).body(productService.getProducts());
     }
     
     @GetMapping("/{id}")
-    Product getProduct(@PathVariable("id") long id) {
+    public Product getProduct(@PathVariable("id") long id) {
         return productService.getProduct(id);
+    }
+    
+    @GetMapping(value = "temp")
+    public ResponseEntity<String> getTemp() {
+        CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
+        int temp = (int) (Math.random() * 50) + 10;
+        String response = String.format("<h3>Current tempreture : %d Degrees<h3>"
+                + "<h3>Response from server %s </h3>"
+                + "<a href = ''>Once more</a>"
+                , temp, LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        
+        return ResponseEntity.ok().cacheControl(cacheControl).body(response);
     }
     
     @PostMapping(value = "")
@@ -61,7 +80,7 @@ public class ProductController {
 //        return map;
 //    }
     
-    @PutMapping(value = "") 
+    @PutMapping(value = "", consumes = MediaType.APPLICATION_XML_VALUE) 
     public Product updateProduct(@RequestBody Product product) {
         productService.updateProduct(product);
         return product;
