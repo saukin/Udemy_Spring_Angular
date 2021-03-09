@@ -25,7 +25,7 @@ public class ProductsBase {
         
     }
     
-    public static class ProductsBaseHolder {
+    private static class ProductsBaseHolder {
         private static final ProductsBase INSTANCE = new ProductsBase();
     }
     

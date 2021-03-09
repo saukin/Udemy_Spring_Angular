@@ -1,6 +1,8 @@
 package me.saukin.springRestApi.model;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import me.saukin.springRestApi.utils.InRangeAnnotation;
 
 /**
  *
@@ -9,15 +11,19 @@ import java.util.Objects;
 public class Product {
     
     private long prodId;
+    @NotBlank
     private String prodName;
+    @InRangeAnnotation
     private int prodPrice;
 
     
     private Product() {
+        super();
     }
        
     
     public Product(long prodId, String prodName, int prodPrice) {
+        super();
         this.prodId = prodId;
         this.prodName = prodName;
         this.prodPrice = prodPrice;

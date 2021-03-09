@@ -1,25 +1,30 @@
 package me.saukin.springRestApi.controller;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.validation.Valid;
 import me.saukin.springRestApi.model.Product;
 import me.saukin.springRestApi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -80,11 +85,26 @@ public class ProductController {
 //        return map;
 //    }
     
-    @PutMapping(value = "", consumes = MediaType.APPLICATION_XML_VALUE) 
-    public Product updateProduct(@RequestBody Product product) {
+    @PutMapping(value = "") 
+    public Product updateProduct(@RequestBody @Valid Product product) {
         productService.updateProduct(product);
         return product;
     }
+    
+    @PatchMapping(value = "/{id}")
+    public @ResponseBody void patchProduct(@PathVariable long id, 
+            @RequestBody Map<Object, Object> fields) {
+        Product product = productService.getProduct(id);
+        //Map : key - field , value - its value
+        fields.forEach((key, value) -> {
+            //use reflection to get field k of product and set its to value 
+            Field field = ReflectionUtils.findField(Product.class, (String) key);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, product, value);
+        });
+        productService.updateProduct(product);
+    }
+    
     
     @DeleteMapping(value = "")
     public Product deleteProduct(@RequestParam(value = "id") long id) {
