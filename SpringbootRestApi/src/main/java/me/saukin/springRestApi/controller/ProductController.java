@@ -45,8 +45,12 @@ public class ProductController {
     }
     
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable("id") long id) {
-        return productService.getProduct(id);
+    public Product getProduct(@PathVariable("id") long id) throws Exception {
+        Product prod = productService.getProduct(id);
+        if (prod == null) {
+            throw new Exception("Nothing found");
+        }
+        return prod;
     }
     
     @GetMapping(value = "temp")
@@ -67,6 +71,16 @@ public class ProductController {
             @RequestParam(value = "price") Integer price) {
         
         productService.addProduct(id, name, price);
+        
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", "Product Added!");
+        return map;
+    }
+    
+    @PostMapping(value = "/p")
+    public Map<String, Object> addProductP(@RequestBody @Valid Product product) {
+        
+        productService.addProduct(product);
         
         Map<String, Object> map = new HashMap<>();
         map.put("status", "Product Added!");
