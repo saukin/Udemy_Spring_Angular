@@ -1,8 +1,6 @@
-package me.saukin.springRestApi.model;
+package me.saukin.Side_Microservice.models;
 
 import java.util.Objects;
-import javax.validation.constraints.NotBlank;
-import me.saukin.springRestApi.utils.InRangeAnnotation;
 
 /**
  *
@@ -11,9 +9,7 @@ import me.saukin.springRestApi.utils.InRangeAnnotation;
 public class Product {
     
     private long prodId;
-    @NotBlank
     private String prodName;
-//    @InRangeAnnotation
     private int prodPrice;
 
     

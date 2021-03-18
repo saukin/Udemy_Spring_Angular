@@ -12,7 +12,6 @@ import me.saukin.springRestApi.model.Product;
 import me.saukin.springRestApi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -78,13 +77,13 @@ public class ProductController {
     }
     
     @PostMapping(value = "/p")
-    public Map<String, Object> addProductP(@RequestBody @Valid Product product) {
+    public Product addProductP(@RequestBody @Valid Product product) {
         
         productService.addProduct(product);
         
         Map<String, Object> map = new HashMap<>();
         map.put("status", "Product Added!");
-        return map;
+        return product;
     }
     
 //    @PutMapping(value = "")
@@ -121,7 +120,13 @@ public class ProductController {
     
     
     @DeleteMapping(value = "")
-    public Product deleteProduct(@RequestParam(value = "id") long id) {
+    public Product deleteProductReqParam(@RequestParam(value = "id") long id) {
+        return productService.removeProduct(id);
+    }
+    
+    
+    @DeleteMapping(value = "/{id}")
+    public Product deleteProductPVariable(@PathVariable(value = "id") long id) {
         return productService.removeProduct(id);
     }
     

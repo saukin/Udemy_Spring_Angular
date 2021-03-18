@@ -32,6 +32,11 @@ public class ProductServiceImpl implements ProductService {
         Product newProduct = new Product(id, name, price);
         productBase.addProduct(newProduct);
     }
+    
+    @Override
+    public void addProduct(Product product) {
+        productBase.addProduct(product);
+    }
 
     @Override
     public void updateProduct(Product product) {

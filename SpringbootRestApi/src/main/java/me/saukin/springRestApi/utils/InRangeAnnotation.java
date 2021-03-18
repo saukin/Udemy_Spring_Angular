@@ -16,7 +16,7 @@ import javax.validation.Payload;
  *
  * @author saukin
  */
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {InRangeValidator.class})
 public @interface InRangeAnnotation {
